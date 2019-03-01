@@ -25,9 +25,8 @@
 <script>
     import { login } from '../service/getData';
     import { mapState, mapActions } from 'vuex';
-    
     export default {
-        data() {
+        data () {
             return {
                 form: {
                     username: '',
@@ -44,7 +43,7 @@
                 showLogin: false
             }
         },
-        mounted() {
+        mounted () {
             this.showLogin = true;
             if (!this.adminInfo.id) {
                 this.getAdminData();
@@ -57,11 +56,11 @@
             ...mapActions([
                 'getAdminData'
             ]),
-            async login(formName) {
+            async login (formName) {
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
-                        let res = await login({user_name: this.form.username, password:this.form.password});
-                        if (res.status == 1) {
+                        let res = await login({user_name: this.form.username, password: this.form.password});
+                        if (res.status === 1) {
                             this.$message({
                                 type: 'success',
                                 message: '登录成功'
@@ -84,7 +83,7 @@
             }
         },
         watch: {
-            adminInfo(val) {
+            adminInfo (val) {
                 if (val.id) {
                     this.$message({
                         type: 'success',

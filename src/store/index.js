@@ -11,21 +11,21 @@ const state = {
 };
 
 const mutations = {
-    saveAdminData(state, adminInfo) {
+    saveAdminInfo (state, adminInfo) {
         state.adminInfo = adminInfo;
     }
 };
 
 const actions = {
-    async getAdminData({commit}) {
+    async getAdminData ({commit}) {
         try {
             const res = await getAdminInfo();
-            if (res.status == 1) {
+            if (res.status === 1) {
                 commit('saveAdminInfo', res.data);
             } else {
                 throw new Error(res.type);
             }
-        } catch(e) {
+        } catch (e) {
             console.log(e.message);
         }
     }

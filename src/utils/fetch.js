@@ -1,13 +1,12 @@
 import { baseUrl } from './env'
-import { resolve } from 'url';
 
-export default async(url = '', data = {}, type = 'GET') => {
+export default async (url = '', data = {}, type = 'GET') => {
     type = type.toUpperCase();
     url = baseUrl + url;
 
-    if (type == 'GET') {
-        //拼接字符串
-        let str;
+    if (type === 'GET') {
+        // 拼接字符串
+        let str = '';
         Object.keys(data).forEach(key => {
             str += key + '=' + data[key] + '&';
         })
@@ -38,12 +37,11 @@ export default async(url = '', data = {}, type = 'GET') => {
             const response = await fetch(url, requestConfig);
             const responseJson = await response.json();
             return responseJson;
-        } catch(e) {
+        } catch (e) {
             throw new Error(e);
         }
-
     } else {
-        //浏览器不支持fetch时使用ajax
+        // 浏览器不支持fetch时使用ajax
         return new Promise((resolve, reject) => {
             let xhr;
             if (window.XMLHttpRequest) {
@@ -58,8 +56,8 @@ export default async(url = '', data = {}, type = 'GET') => {
             }
 
             xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
                         let obj = xhr.responseText;
                         if (typeof obj !== 'object') {
                             obj = JSON.parse(obj);
