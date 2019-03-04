@@ -26,3 +26,9 @@ export const totalOrderCount = data => fetch('/bos/orders/count', data);
 
 // 取得总管理员数
 export const totalAdminCount = () => fetch('/admin/count');
+
+// 获取用户列表
+export const userList = offset => fetch('/v1/users/list', {
+    limit: 20,
+    offset
+});
