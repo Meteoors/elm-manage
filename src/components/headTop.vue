@@ -50,7 +50,7 @@
                             type: 'success',
                             message: '退出成功'
                         });
-                        this.$router.push('/login');
+                        this.$router.push('/');
                     } else {
                         this.$message({
                             type: 'error',
