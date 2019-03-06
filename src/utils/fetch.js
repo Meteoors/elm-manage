@@ -38,7 +38,7 @@ export default async (url = '', data = {}, type = 'GET') => {
             const responseJson = await response.json();
             return responseJson;
         } catch (e) {
-            throw new Error(e);
+            console.log(e);
         }
     } else {
         // 浏览器不支持fetch时使用ajax

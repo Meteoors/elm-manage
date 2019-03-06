@@ -163,7 +163,7 @@
                 if (!lt2M) {
                     this.$message({
                         type: 'error',
-                        message: '上传头像图片大小不能超过1.5MB!!'
+                        message: '上传头像图片大小不能超过1.5MB!'
                     });
                     return false;
                 }

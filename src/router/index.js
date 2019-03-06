@@ -8,6 +8,7 @@ const manage = r => require.ensure([], () => r(require('../page/manage/manage'))
 const home = r => require.ensure([], () => r(require('../page/manage/children/home')), 'home');
 const userList = r => require.ensure([], () => r(require('../page/manage/children/userList')), 'userList');
 const shopList = r => require.ensure([], () => r(require('../page/manage/children/shopList')), 'shopList');
+const foodList = r => require.ensure([], () => r(require('../page/manage/children/foodList')), 'foodList');
 
 export default new Router({
   routes: [
@@ -33,6 +34,11 @@ export default new Router({
           path: 'shoplist',
           component: shopList,
           meta: ['数据管理', '商家列表']
+        },
+        {
+          path: 'foodlist',
+          component: foodList,
+          meta: ['数据管理', '食品列表']
         }
       ]
     }

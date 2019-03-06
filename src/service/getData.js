@@ -42,7 +42,7 @@ export const cityGuess = () => fetch('/v1/cities', {type: 'guess'});
 // 获取商家列表
 export const shopList = data => fetch('/shopping/restaurants', data);
 
-// 获取分类列表
+// 获取商家分类列表
 export const categoryList = () => fetch('/shopping/v2/restaurant/category');
 
 // 获取地址列表
@@ -53,3 +53,21 @@ export const updateRestaurant = data => fetch('/shopping/updateshop', data, 'POS
 
 // 删除商铺
 export const deleteShop = id => fetch('/shopping/restaurant/' + id, {}, 'DELETE');
+
+// 获取食品列表
+export const foodList = offset => fetch('/shopping/v2/foods', {
+    limit: 20,
+    offset
+});
+
+// 获取食品总数
+export const foodCount = () => fetch('/shopping/v2/foods/count');
+
+// 获取商家详情
+export const shopDetail = id => fetch('/shopping/restaurant/' + id);
+
+// 获取食品种类详情
+export const categoryDetail = id => fetch('/shopping/v2/menu/' + id);
+
+// 获取店铺食品种类列表
+export const foodCategoryList = id => fetch('/shopping/getcategory/' + id);
