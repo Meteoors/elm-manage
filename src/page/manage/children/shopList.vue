@@ -115,7 +115,7 @@
                 this.getShops();
             },
             async getShops () {
-                this.tableData = {}; // 清空表格数据
+                this.tableData = []; // 清空表格数据
                 let {latitude, longitude} = this.city;
                 let res = await shopList({latitude, longitude, offset: this.offset});
                 if (res instanceof Array) {

@@ -71,3 +71,27 @@ export const categoryDetail = id => fetch('/shopping/v2/menu/' + id);
 
 // 获取店铺食品种类列表
 export const foodCategoryList = id => fetch('/shopping/getcategory/' + id);
+
+// 更新食品
+export const updateFood = data => fetch('/shopping/v2/updatefood', data, 'POST');
+
+// 删除食品
+export const deleteFood = id => fetch('/shopping/v2/food/' + id, {}, 'DELETE');
+
+// 获取订单列表
+export const orderList = offset => fetch('/bos/orders', {
+    limit: 20,
+    offset
+});
+
+// 获取用户信息
+export const userDetail = id => fetch('/v1/user/' + id);
+
+// 获取地址信息
+export const addressDetail = id => fetch('/v1/addresse/' + id);
+
+// 获取管理员列表
+export const adminList = offset => fetch('/admin/all', {
+    offset,
+    limit: 20
+});
