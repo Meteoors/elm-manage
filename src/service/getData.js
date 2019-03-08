@@ -95,3 +95,6 @@ export const adminList = offset => fetch('/admin/all', {
     offset,
     limit: 20
 });
+
+// 添加餐馆
+export const addShop = data => fetch('/shopping/addshop', data, 'POST');
