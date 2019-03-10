@@ -98,3 +98,9 @@ export const adminList = offset => fetch('/admin/all', {
 
 // 添加餐馆
 export const addShop = data => fetch('/shopping/addshop', data, 'POST');
+
+// 添加食品种类
+export const addCategory = data => fetch('/shopping/addcategory', data, 'POST');
+
+// 添加食品
+export const addFood = data => fetch('/shopping/addfood', data, 'POST');
