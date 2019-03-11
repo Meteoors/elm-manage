@@ -81,7 +81,7 @@
                                 }
                             },
                             axisLabel: {
-                                formater: '{value}'
+                                formatter: '{value}'
                             }
                         },
                         {
@@ -95,7 +95,7 @@
                                 }
                             },
                             axisLabel: {
-                                formater: '{value}'
+                                formatter: '{value}'
                             }
                         }
                     ],
@@ -144,9 +144,7 @@
                 this.initData();
             },
             sevenData () {
-                console.log(this.sevenData + '100000000000000000000');
                 this.initData();
-                console.log(this.sevenData + '1111111111111111');
             }
         }
     }

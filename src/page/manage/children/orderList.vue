@@ -65,7 +65,7 @@
             },
             async getOrders () {
                 this.tableData = [];
-                let res = await orderList();
+                let res = await orderList(this.offset);
                 if (res instanceof Array) {
                     res.forEach((item, index) => {
                         let order = {};

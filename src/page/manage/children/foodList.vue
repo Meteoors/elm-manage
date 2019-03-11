@@ -343,6 +343,7 @@
         border: 1px dashed #d9d9d9;
         border-radius: 6px;
         cursor: pointer;
+        overflow: hidden;
     }
     .upload /deep/ .el-upload:hover{
         border-color: #409eff;
@@ -350,6 +351,7 @@
     .avatar{
         width: 120px;
         height: 120px;
+        display: block;
     }
     .upload-icon{
         font-size: 28px;

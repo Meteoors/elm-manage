@@ -1,6 +1,6 @@
 import fetch from '../utils/fetch';
 
-// 获取用户信息
+// 获取管理员信息
 export const getAdminInfo = () => fetch('/admin/info');
 
 // 登录
@@ -104,3 +104,6 @@ export const addCategory = data => fetch('/shopping/addcategory', data, 'POST');
 
 // 添加食品
 export const addFood = data => fetch('/shopping/addfood', data, 'POST');
+
+// 获取用户分布信息
+export const spreadCount = () => fetch('/v1/user/city/count');

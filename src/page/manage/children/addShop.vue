@@ -2,7 +2,8 @@
     <div id="addshop">
         <head-top></head-top>
 
-        <div class="wrapper">
+        <el-row class="wrapper">
+            <el-col :span="13" :offset="4">
             <el-form :model="form" :rules="rules" ref="form" label-width="140px">
                 <el-form-item label="店铺名称" prop="name">
                     <el-input v-model="form.name"></el-input>
@@ -23,7 +24,7 @@
                 <el-form-item label="店铺分类">
                     <el-cascader :options="cascaders" v-model="category"></el-cascader>
                 </el-form-item>
-                <el-form-item label="店铺特点" prop="description">
+                <el-form-item label="店铺特点">
                     <div class="switchs">
                         <span>品牌保证</span> <el-switch v-model="form.is_premium"></el-switch>
                         <span>蜂鸟专送</span> <el-switch v-model="form.delivery_mode"></el-switch>
@@ -35,29 +36,29 @@
                         <span>开发票</span> <el-switch v-model="form.piao"></el-switch>
                     </div>
                 </el-form-item>
-                <el-form-item label="配送费">
+                <el-form-item label="配送费" prop="float_delivery_fee">
                     <el-input-number v-model="form.float_delivery_fee" :min="0" :max="20"></el-input-number>
                 </el-form-item>
-                <el-form-item label="起送价">
+                <el-form-item label="起送价" prop="float_minimum_order_amount">
                     <el-input-number v-model="form.float_minimum_order_amount" :min="0" :max="100"></el-input-number>
                 </el-form-item>
-                <el-form-item label="营业时间">
+                <el-form-item label="营业时间" class="time">
                     <el-time-select v-model="form.startTime" placeholder="起始时间" :picker-options="{start: '5:30', step: '00:15', end: '23:30'}"></el-time-select>
                     <el-time-select v-model="form.endTime" placeholder="结束时间" :picker-options="{start: '5:30', step: '00:15', end: '23:30'}"></el-time-select>
                 </el-form-item>
-                <el-form-item label="上传店铺头像">
+                <el-form-item label="上传店铺头像" prop="image_path">
                     <el-upload :show-file-list="false" class="upload" :action="baseUrl + '/v1/addimg/shop'" :before-upload="beforeUpload" :on-success="res => uploadSuccess(res, 'image_path')">
                         <img v-if="form.image_path" :src="baseImgPath + form.image_path" class="image">
                         <i v-else class="el-icon-plus upload-icon"></i>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="上传营业执照">
+                <el-form-item label="上传营业执照" prop="business_license_image">
                     <el-upload :show-file-list="false" class="upload" :action="baseUrl + '/v1/addimg/shop'" :before-upload="beforeUpload" :on-success="res => uploadSuccess(res, 'business_license_image')">
                         <img v-if="form.business_license_image" :src="baseImgPath + form.business_license_image" class="image">
                         <i v-else class="el-icon-plus upload-icon"></i>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="上传餐饮服务许可证">
+                <el-form-item label="上传餐饮服务许可证" prop="catering_service_license_image">
                     <el-upload :show-file-list="false" class="upload" :action="baseUrl + '/v1/addimg/shop'" :before-upload="beforeUpload" :on-success="res => uploadSuccess(res, 'catering_service_license_image')">
                         <img v-if="form.catering_service_license_image" :src="baseImgPath + form.catering_service_license_image" class="image">
                         <i v-else class="el-icon-plus upload-icon"></i>
@@ -80,19 +81,20 @@
                 </el-table>
                 <el-button @click="addShop" type="primary" size="medium" style="display: block; margin: 20px auto;">立即创建</el-button>
             </el-form>
+            </el-col>
+        </el-row>
 
-            <el-dialog :visible.sync="showDialog" title="提示" :modal-append-to-body="false">
-                <el-form>
-                    <el-form-item label="请输入活动详情">
-                        <el-input v-model="description"></el-input>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer">
-                    <el-button size="mini" @click="showDialog = false">取消</el-button>
-                    <el-button size="mini" type="primary" @click="addActivity">确定</el-button>
-                </div>
-            </el-dialog>
-        </div>
+        <el-dialog :visible.sync="showDialog" title="提示" :modal-append-to-body="false">
+            <el-form>
+                <el-form-item label="请输入活动详情">
+                    <el-input v-model="description"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer">
+                <el-button size="mini" @click="showDialog = false">取消</el-button>
+                <el-button size="mini" type="primary" @click="addActivity">确定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -265,18 +267,31 @@
                 }
             },
             async addShop () {
-                // 格式化商铺分类
-                this.form.category = this.category.join('/');
+                this.$refs.form.validate(async valid => {
+                    if (valid) {
+                        // 格式化商铺分类
+                        this.form.category = this.category.join('/');
 
-                this.form.activities = this.tableData;
+                        this.form.activities = this.tableData;
 
-                let res = await addShop(this.form);
-                if (res.status === 1) {
-                    this.$message.success('商铺添加成功');
-                    this.$refs.form.resetFields();
-                } else {
-                    this.$message.error(res.message);
-                }
+                        let res = await addShop(this.form);
+                        if (res.status === 1) {
+                            this.$message.success('商铺添加成功');
+                            this.category = [];
+                            this.form.is_premium = this.form.delivery_mode = this.form.new = this.form.bao = this.form.zhun = this.form.piao = true;
+                            this.form.startTime = this.form.endTime = '';
+                            this.selectedIndex = 0;
+                            this.tableData = [
+                                {icon_name: '减', name: '满减优惠', description: '满30减5，满60减8'}
+                            ]
+                            this.$refs.form.resetFields();
+                        } else {
+                            this.$message.error(res.message);
+                        }
+                    } else {
+                        return false;
+                    }
+                });
             }
         }
     }
@@ -285,11 +300,10 @@
 <style lang='less' scoped>
     .wrapper{
         margin-top: 20px;
-        display: flex;
-        margin-left: 250px;
     }
     .switchs{
         margin-bottom: 10px;
+        min-width: 360px;
     }
     .switchs .el-switch{
         margin-right: 15px;
@@ -306,6 +320,7 @@
         width: 120px;
         height: 120px;
         display: block;
+        border-radius: 6px;
     }
     .upload-icon{
         font-size: 28px;
@@ -314,5 +329,8 @@
         width: 120px;
         text-align: center;
         color: #8c939d;
+    }
+    .time /deep/ .el-form-item__content{
+        min-width: 445px;
     }
 </style>

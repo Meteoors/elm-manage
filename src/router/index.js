@@ -13,6 +13,9 @@ const orderList = r => require.ensure([], () => r(require('../page/manage/childr
 const adminList = r => require.ensure([], () => r(require('../page/manage/children/adminList')), 'adminList');
 const addShop = r => require.ensure([], () => r(require('../page/manage/children/addShop')), 'addShop');
 const addFood = r => require.ensure([], () => r(require('../page/manage/children/addFood')), 'addFood');
+const visitor = r => require.ensure([], () => r(require('../page/manage/children/visitor')), 'visitor');
+const adminSet = r => require.ensure([], () => r(require('../page/manage/children/adminSet')), 'adminSet');
+const explain = r => require.ensure([], () => r(require('../page/manage/children/explain')), 'explain');
 
 export default new Router({
   routes: [
@@ -63,6 +66,21 @@ export default new Router({
           path: 'addfood',
           component: addFood,
           meta: ['添加数据', '添加商品']
+        },
+        {
+          path: 'visitor',
+          component: visitor,
+          meta: ['图表', '用户分布']
+        },
+        {
+          path: 'adminset',
+          component: adminSet,
+          meta: ['设置', '管理员设置']
+        },
+        {
+          path: 'explain',
+          component: explain,
+          meta: ['说明', '说明']
         }
       ]
     }

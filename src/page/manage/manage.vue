@@ -22,14 +22,10 @@
                         <el-menu-item index="/manage/visitor">用户分布</el-menu-item>
                     </el-submenu>
                     <el-submenu index="5">
-                        <template slot="title"><i class="el-icon-edit"></i><span>编辑</span></template>
-                        <el-menu-item index="/manage/edit">文本编辑</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="6">
                         <template slot="title"><i class="el-icon-setting"></i><span>设置</span></template>
                         <el-menu-item index="/manage/adminset">管理员设置</el-menu-item>
                     </el-submenu>
-                    <el-submenu index="7">
+                    <el-submenu index="6">
                         <template slot="title"><i class="el-icon-warning"></i><span>说明</span></template>
                         <el-menu-item index="/manage/explain">说明</el-menu-item>
                     </el-submenu>

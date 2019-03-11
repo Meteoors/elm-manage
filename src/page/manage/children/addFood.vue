@@ -36,8 +36,8 @@
                     <el-form-item label="食品详情" prop="description">
                         <el-input v-model="form.description"></el-input>
                     </el-form-item>
-                    <el-form-item label="上传食品图片">
-                        <el-upload class="upload" :action="baseUrl + '/v1/addimg/food'" :before-upload="beforeUpload" :on-success="uploadSuccess">
+                    <el-form-item label="上传食品图片" prop="image_path">
+                        <el-upload class="upload" :show-file-list="false" :action="baseUrl + '/v1/addimg/food'" :before-upload="beforeUpload" :on-success="uploadSuccess">
                             <img :src="baseImgPath + form.image_path" v-if="form.image_path" class="image">
                             <i v-else class="el-icon-plus upload-icon"></i>
                         </el-upload>
@@ -57,8 +57,8 @@
                     <el-form-item v-show="!radio" label="价格">
                         <el-input-number v-model="form.specs[0].price" :min="0" :max="10000"></el-input-number>
                     </el-form-item>
-                    <el-button class="btn" v-show="radio" size="mini" @click="showAddSpec = true" type="primary">添加规格</el-button>
-                    <el-table :data="form.specs" v-show="radio">
+                    <el-button class="btn" v-show="radio" size="mini" @click="showSpecDialog" type="primary">添加规格</el-button>
+                    <el-table :data="specTable" v-show="radio">
                         <el-table-column label="规格" align="center" prop="specs"></el-table-column>
                         <el-table-column label="包装费" align="center" prop="packing_fee"></el-table-column>
                         <el-table-column label="价格" align="center" prop="price"></el-table-column>
@@ -73,8 +73,8 @@
             </el-col>
         </el-row>
 
-        <el-dialog :visible.sync="showChooseShop" title="提示" :before-close="handleClose" :modal-append-to-body="false">
-            <span>添加食品需要选择一个商铺，现在就去选择商铺吗？</span>
+        <el-dialog :visible.sync="showChooseShop" title="提示" width="450px" :before-close="handleClose" :modal-append-to-body="false">
+            <span>添加商品需要选择一个商铺，现在就去选择商铺吗？</span>
             <div slot="footer">
                 <el-button size="small" @click="handleClose">取消</el-button>
                 <el-button size="small" type="primary" @click="chooseShop">确定</el-button>
@@ -93,7 +93,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer">
-                <el-button size="medium">取消</el-button>
+                <el-button size="medium" @click="showAddSpec = false">取消</el-button>
                 <el-button size="medium" type="primary" @click="addSpec">确定</el-button>
             </div>
         </el-dialog>
@@ -125,6 +125,9 @@
                     description: '',
                     restaurant_id: null
                 },
+                specTable: [
+                    {specs: '默认', packing_fee: 0, price: 20}
+                ],
                 specForm: {
                     specs: '',
                     packing_fee: 0,
@@ -188,6 +191,10 @@
                 }
             },
             async addCategory () {
+                if (!this.$route.query.restaurant_id) {
+                    this.showChooseShop = true;
+                    return;
+                }
                 let res = await addCategory(this.categoryForm);
                 if (res.status === 1) {
                     this.$message.success('添加食品种类成功');
@@ -225,30 +232,53 @@
                 }
             },
             deleteSpec (index) {
-                this.form.specs.splice(index, 1);
+                this.specTable.splice(index, 1);
+            },
+            showSpecDialog () {
+                this.showAddSpec = true;
             },
             addSpec () {
-                this.form.specs.push(this.specForm);
-                this.showAddSpec = false;
-                this.$refs.specForm.resetFields();
+                this.$refs.specForm.validate(valid => {
+                    if (valid) {
+                        let specForm = Object.assign({}, this.specForm);
+                        this.specTable.push(specForm);
+                        this.showAddSpec = false;
+                        this.$refs.specForm.resetFields();
+                    } else {
+                        return false;
+                    }
+                });
             },
             async addFood () {
-                if (!this.form.specs.length) {
+                if (this.radio && !this.specTable.length) {
                     this.$message.error('至少填写一种规格');
+                    return;
+                }
+                if (!this.$route.query.restaurant_id) {
+                    this.showChooseShop = true;
+                    return;
                 }
                 this.$refs.form.validate(async valid => {
                     if (valid) {
+                        if (this.radio) {
+                            this.form.specs = this.specTable;
+                        }
                         try {
                             let res = await addFood(this.form);
                             if (res.status === 1) {
                                 this.$message.success('添加商品成功');
+                                this.radio = 0;
                                 this.$refs.form.resetFields();
+                                this.form.specs = [{specs: '默认', packing_fee: 0, price: 20}];
+                                this.specTable = [{specs: '默认', packing_fee: 0, price: 20}];
                             } else {
                                 this.$message.error(res.message);
                             }
                         } catch (e) {
                             console.log('添加商品失败', e);
                         }
+                    } else {
+                        return false;
                     }
                 });
             }
@@ -273,12 +303,15 @@
     }
     .form{
         border: 1px solid #eaeefb;
-        box-shadow: 0 0 8px 0 rgba(232,237,250,.6);
         border-radius: 6px;
         margin: 0 auto 20px;
     }
+    .form:hover{
+        box-shadow: 0 0 9px rgba(232,237,250,.6), 2px 2px 4px rgba(232,237,250,.5), -2px -2px 4px rgba(232,237,250,.5);
+    }
     .category_from{
         background: #f9fafc;
+        overflow: hidden;
         .el-form-item{
             padding-right: 25px;
         }
@@ -315,6 +348,7 @@
         transition: all .4s;
         span{
             color: #999;
+            transition: all .4s;
         }
     }
     .add_category:hover{
@@ -357,5 +391,6 @@
         width: 120px;
         height: 120px;
         display: block;
+        border-radius: 6px;
     }
 </style>
